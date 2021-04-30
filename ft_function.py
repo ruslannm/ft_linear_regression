@@ -6,7 +6,7 @@
 #    By: rgero <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/29 20:02:55 by rgero             #+#    #+#              #
-#    Updated: 2021/04/29 21:51:02 by rgero            ###   ########.fr        #
+#    Updated: 2021/04/30 20:42:18 by rgero            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ def ft_read_csv(filename, columns):
         df = pd.read_csv(filename)
         if list(df.columns) == columns:
             for y in df.columns:
-                if(df[y].dtype == np.float64 or df[y].dtype == np.int64):
+                if(df[y].dtype == np.float64 or df[y].dtype == np.int64)\
+                and df.isnull().sum()[y] == 0:
                     is_correct += 1
     if is_correct == len(columns):                
         return df
