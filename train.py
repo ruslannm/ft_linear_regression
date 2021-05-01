@@ -6,7 +6,7 @@
 #    By: rgero <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/30 19:58:59 by rgero             #+#    #+#              #
-#    Updated: 2021/05/01 14:19:05 by rgero            ###   ########.fr        #
+#    Updated: 2021/05/01 15:43:28 by rgero            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -88,22 +88,26 @@ def save_real_thetas(filename, real_theta):
         f.write('theta0,theta1\n')
         f.write("%f,%f" %(real_theta[0], real_theta[1]))
 
-def train(arg, filename, columns, learning_rate, number_epoch):
+def train(arg, filename, columns, learning_rate, number_epoch, precision):
     if path.exists(filename):
         df = ft.ft_read_csv(filename, columns)
         theta = [0.0, 0.0]
         x, x_std, mean_x, std_x = get_value(filename, df, columns[0])
         y, y_std, mean_y, std_y = get_value(filename, df, columns[1])
-        i = 0
         if '-err' in arg:
             print('Mean squared error (MSE) after each iteration')
             print('iter : MSE')
-        while i < number_epoch:
+        mse_prev = 0
+        mse_cur = 1
+        i = 0
+        while i < number_epoch and abs(mse_cur - mse_prev) > precision:
             gradient = get_gradient(theta, learning_rate, x_std, y_std)
             theta[0] -= gradient[0]
             theta[1] -= gradient[1]
+            mse_prev = mse_cur
+            mse_cur = ft_mserror(x_std, y_std, theta)
             if '-err' in arg:
-                print("{:5d}: {}".format(i + 1, ft_mserror(x_std, y_std, theta)))
+                print("{:5d}: {}".format(i + 1, mse_cur))
             i += 1
     else:
         print(f'\nError: {filename} is missing')
@@ -130,4 +134,4 @@ def get_arg():
 
 if __name__ == "__main__":
     arg = get_arg()
-    train(arg, "data.csv", ['km', 'price'], 0.1, 100)
+    train(arg, "data.csv", ['km', 'price'], 0.1, 100, 0.000001)
