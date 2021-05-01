@@ -6,7 +6,7 @@
 #    By: rgero <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/30 19:58:59 by rgero             #+#    #+#              #
-#    Updated: 2021/05/01 15:43:28 by rgero            ###   ########.fr        #
+#    Updated: 2021/05/01 15:56:18 by rgero            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -100,7 +100,7 @@ def train(arg, filename, columns, learning_rate, number_epoch, precision):
         mse_prev = 0
         mse_cur = 1
         i = 0
-        while i < number_epoch and abs(mse_cur - mse_prev) > precision:
+        while abs(mse_cur - mse_prev) > precision and i < number_epoch:
             gradient = get_gradient(theta, learning_rate, x_std, y_std)
             theta[0] -= gradient[0]
             theta[1] -= gradient[1]
@@ -134,4 +134,8 @@ def get_arg():
 
 if __name__ == "__main__":
     arg = get_arg()
-    train(arg, "data.csv", ['km', 'price'], 0.1, 100, 0.000001)
+    learning_rate = 0.1
+    number_epoch = 100
+    precision = 0.000001
+    train(arg, "data.csv", ['km', 'price'], learning_rate, number_epoch, 
+         precision)
