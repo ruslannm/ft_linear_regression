@@ -6,7 +6,7 @@
 #    By: rgero <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/29 20:02:55 by rgero             #+#    #+#              #
-#    Updated: 2021/05/01 13:30:13 by rgero            ###   ########.fr        #
+#    Updated: 2021/05/01 14:04:09 by rgero            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,7 @@ def ft_is_number(str, only_positive, str_name):
         print('\nError: {} must be number'.format(str_name))
         return False
 
-def estimateprice(theta, mileage):
+def estimatePrice(theta, mileage):
     return theta[0] + theta[1] * mileage
 
 def print_usage():

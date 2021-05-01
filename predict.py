@@ -6,7 +6,7 @@
 #    By: rgero <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/29 20:15:26 by rgero             #+#    #+#              #
-#    Updated: 2021/05/01 13:25:14 by rgero            ###   ########.fr        #
+#    Updated: 2021/05/01 14:04:28 by rgero            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,8 +23,12 @@ def predict(filename, columns):
     if path.exists(filename):
         df = ft.ft_read_csv(filename, columns)
         theta = (df.iloc[0][columns[0]], df.iloc[0][columns[1]])
-    estimate_price = ft.estimateprice(theta, mileage)
-    print(f'This car costs {round(estimate_price)}')
+    estimate_price = ft.estimatePrice(theta, mileage)
+    if estimate_price >= 0:
+        print(f'This car costs {round(estimate_price)}.')
+    else:
+        print('This car doesn\'t cost anything'\
+              ' because it has a lot of mileage.')
 
 if __name__ == "__main__":
     predict('params.csv', ['theta0', 'theta1'])
