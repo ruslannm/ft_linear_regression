@@ -6,7 +6,7 @@
 #    By: rgero <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/29 20:02:55 by rgero             #+#    #+#              #
-#    Updated: 2021/05/01 14:04:09 by rgero            ###   ########.fr        #
+#    Updated: 2021/05/01 14:18:36 by rgero            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,3 +55,4 @@ def print_usage():
           'of regression')
     print('    -h   : print help')
     print('\n   Getting a prediction: python3 predict.py')
+    
