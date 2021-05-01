@@ -6,7 +6,7 @@
 #    By: rgero <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/29 20:15:26 by rgero             #+#    #+#              #
-#    Updated: 2021/04/30 20:05:20 by rgero            ###   ########.fr        #
+#    Updated: 2021/05/01 13:25:14 by rgero            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,6 @@ from os import path
 import ft_function as ft
 
 def predict(filename, columns):
-
     user_input = input('Please enter a mileage: ')
     if ft.ft_is_number(user_input, 1, 'mileage'):
         mileage = float(user_input)

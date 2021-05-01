@@ -6,7 +6,7 @@
 #    By: rgero <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/29 20:02:55 by rgero             #+#    #+#              #
-#    Updated: 2021/04/30 20:42:18 by rgero            ###   ########.fr        #
+#    Updated: 2021/05/01 13:30:13 by rgero            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,13 @@ def ft_is_number(str, only_positive, str_name):
 def estimateprice(theta, mileage):
     return theta[0] + theta[1] * mileage
 
-
-if __name__ == "__main__":
-    ft_read_csv('params.csv', ['theta0', 'theta1'])
+def print_usage():
+    print('Usage:')
+    print('    Training model: python3 train.py [flag]')
+    print('    Flags:')
+    print('    -v   : visualize dataset (original and standardized)',
+          'and solution')
+    print('    -err : print mean squared error after each iteration',
+          'of regression')
+    print('    -h   : print help')
+    print('\n   Getting a prediction: python3 predict.py')
