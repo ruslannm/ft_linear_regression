@@ -6,14 +6,14 @@
 #    By: rgero <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/30 19:58:59 by rgero             #+#    #+#              #
-#    Updated: 2021/05/22 20:01:03 by rgero            ###   ########.fr        #
+#    Updated: 2021/05/23 18:42:07 by rgero            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 from os import path
 import sys
 import matplotlib
-matplotlib.use('TkAgg')  #Qt5Agg  'TkAgg'
+matplotlib.use('MacOSX')       # or 'TkAgg' 
 import matplotlib.pyplot as plt
 
 import ft_function as ft
@@ -21,6 +21,7 @@ from settings import settings
 
 def ft_mean(l):
     return sum(l) / len(l)
+
 
 def ft_std(l):
     mean = ft_mean(l)
@@ -30,6 +31,7 @@ def ft_std(l):
         diff = diff + (i - mean) ** 2
     return (diff / len_l) ** 0.5
 
+
 def ft_mserror(x, y, theta):
     l = []
     len_l = len(y)
@@ -37,6 +39,7 @@ def ft_mserror(x, y, theta):
         y_pred = ft.estimatePrice(theta, x[i])
         l.append((y_pred - y[i]) ** 2)
     return ft_mean(l)
+
 
 def get_value(filename, df, column):
     l_std = []
@@ -93,13 +96,17 @@ def get_real_theta(theta, mean_x, std_x, mean_y, std_y):
 
 
 def save_real_thetas(filename, real_theta):
-    with open(filename, 'w') as f:
-        f.write('theta0,theta1\n')
-        f.write("%f,%f" %(real_theta[0], real_theta[1]))
+    try:
+        with open(filename, 'w') as f:
+            f.write('theta0,theta1\n')
+            f.write("%f,%f" %(real_theta[0], real_theta[1]))
+    except Exception as e:
+        print("Error: ", e)
+        exit(1)
 
 
 def train(arg, filename, columns, learning_rate, number_epoch, precision, pause):
-    if path.exists(filename):
+    try:
         df = ft.ft_read_csv(filename, columns)
         theta = [0.0, 0.0]
         x, x_std, mean_x, std_x = get_value(filename, df, columns[0])
@@ -110,6 +117,12 @@ def train(arg, filename, columns, learning_rate, number_epoch, precision, pause)
         if '-a' in arg:
             fig = plt.figure()
             fig.show()
+            x_min = min(x)
+            x_max = max(x)
+            y_max = max(y)
+            y_diff = y_max * 0.1
+            y_min = min(y) - y_diff
+            y_max += y_diff
         mse_prev = 0
         mse_cur = 1
         i = 0
@@ -128,26 +141,24 @@ def train(arg, filename, columns, learning_rate, number_epoch, precision, pause)
                 plt.xlabel('Mileage')
                 plt.ylabel('Price')
                 plt.plot(x, y, 'ro')
-                x_min = min(x)
-                x_max = max(x)
-                y_min = ft.estimatePrice(real_theta, x_min)
-                y_max = ft.estimatePrice(real_theta, x_max)
-                plt.plot([x_min, x_max], [y_min, y_max])
+                plt.ylim(y_min, y_max)
+                y_min_estimate = ft.estimatePrice(real_theta, x_min)
+                y_max_estimate = ft.estimatePrice(real_theta, x_max)
+                plt.plot([x_min, x_max], [y_min_estimate, y_max_estimate])
                 plt.pause(pause)
             i += 1
         if abs(mse_cur - mse_prev) > precision:
             print(f'\nError: Calculation stopped, maximum number of epochs exceeded.')
             exit(1)
-    else:
-        print(f'\nError: {filename} is missing')
+        real_theta = get_real_theta(theta, mean_x, std_x, mean_y, std_y)
+        save_real_thetas('params.csv', real_theta)
+        if '-v' in arg:
+            plot_value((x, x_std), (y, y_std), real_theta, theta)
+        if '-a' in arg and '-v' not in arg:
+            plt.show()
+    except Exception as e:
+        print("Error: ", e)
         exit(1)
-    real_theta = get_real_theta(theta, mean_x, std_x, mean_y, std_y)
-    save_real_thetas('params.csv', real_theta)
-    if '-v' in arg:
-        plot_value((x, x_std), (y, y_std), real_theta, theta)
-    if '-a' in arg:
-        plt.title(r'Original values, epochs = {}, $\theta0$ = {:10.3f}, $\theta1$={:10.3f}'.format(i, real_theta[0], real_theta[1]))
-        plt.show()
 
 
 def get_arg():
@@ -172,5 +183,13 @@ if __name__ == "__main__":
     precision = float(settings.precision)
     pause = float(settings.pause)
     filename = settings.filename
-    train(arg, filename, ['km', 'price'], learning_rate, number_epoch, 
-         precision, pause)
+    try:
+        if path.exists(filename):
+            train(arg, filename, ['km', 'price'], learning_rate, number_epoch, 
+                precision, pause)
+        else:
+            print(f'\nError: {filename} is missing')
+            exit(1)
+    except Exception as e:
+        print("Error: ", e)
+        exit(1)
